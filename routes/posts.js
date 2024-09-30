@@ -21,12 +21,13 @@ if (!isNaN(limit) && limit > 0) {
 })
 
 // Get single posts
-router.get('/:id', (req, res) => {
+router.get('/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
     const post = posts.find((post)=> post.id === id )
 
     if(!post) {
-        return res.status(404).json({msg: `A post with the id of ${id} was not found`})
+      const error = new Error(`A post with the id of ${id} was not found`)
+      return next(error)
     } 
         res.status(200).json(post);
 
@@ -48,12 +49,13 @@ router.post('/', (req, res) => {
 
 
 // Update post
-router.put('/:id', (req, res) => {
+router.put('/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
     const post = posts.find((post) => post.id === id);
 
     if (!post) {
-        return res.status(404).json({msg: `A post with id of ${id} was not found`})
+        const error = new Error(`A post with the id of ${id} was not found`)
+        return next(error)
     }
 
     post.title = req.body.title
@@ -63,12 +65,13 @@ router.put('/:id', (req, res) => {
 
 
 // Update post
-router.delete('/:id', (req, res) => {
+router.delete('/:id', (req, res, next) => {
     const id = parseInt(req.params.id)
     const post = posts.find((post) => post.id === id);
 
     if (!post) {
-        return res.status(404).json({msg: `A post with id of ${id} was not found`})
+       const error = new Error(`A post with the id of ${id} was not found`)
+       return next(error)
     }
 
     posts = posts.filter((post) => post.id !== id)
